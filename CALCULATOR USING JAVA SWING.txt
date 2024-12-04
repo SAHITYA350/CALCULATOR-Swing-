@@ -1,0 +1,208 @@
+//CALCULATOR USING JAVA SWING
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Stack;
+
+class Main implements ActionListener {
+    JFrame f;
+    JTextField tf;
+    JButton b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, badd, bsub, bmul, bdiv, beq, bdel, bdec, bac, bmod, b00;
+    StringBuilder currentExpression;
+
+    // Constructor
+    Main() {
+        f = new JFrame("Calculator");
+        f.setVisible(true);
+        f.setLayout(null);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setBounds(20, 20, 300, 350);
+        Font fo = new Font("Arial", Font.BOLD, 20);
+        f.setResizable(false);
+
+        tf = new JTextField();
+        tf.setFont(fo);
+        tf.setBackground(Color.black);
+        tf.setForeground(Color.white);
+        tf.setBounds(11, 30, 270, 50);
+        f.add(tf);
+        b1 = new JButton("1");
+        b1.setForeground(Color.white);
+        b1.setBackground(Color.BLACK);
+        b2 = new JButton("2");
+        b2.setForeground(Color.white);
+        b2.setBackground(Color.BLACK);
+        b3 = new JButton("3");
+        b3.setForeground(Color.white);
+        b3.setBackground(Color.BLACK);
+        b4 = new JButton("4");
+        b4.setForeground(Color.white);
+        b4.setBackground(Color.BLACK);
+        b5 = new JButton("5");
+        b5.setForeground(Color.white);
+        b5.setBackground(Color.BLACK);
+        b6 = new JButton("6");
+        b6.setForeground(Color.white);
+        b6.setBackground(Color.BLACK);
+        b7 = new JButton("7");
+        b7.setForeground(Color.white);
+        b7.setBackground(Color.BLACK);
+        b8 = new JButton("8");
+        b8.setForeground(Color.white);
+        b8.setBackground(Color.BLACK);
+        b9 = new JButton("9");
+        b9.setForeground(Color.white);
+        b9.setBackground(Color.BLACK);
+        b0 = new JButton("0");
+        b0.setForeground(Color.white);
+        b0.setBackground(Color.BLACK);
+        badd = new JButton("+");
+        badd.setForeground(Color.blue);
+        badd.setBackground(Color.BLACK);
+        bsub = new JButton("-");
+        bsub.setForeground(Color.blue);
+        bsub.setBackground(Color.BLACK);
+        bmul = new JButton("*");
+        bmul.setForeground(Color.blue);
+        bmul.setBackground(Color.BLACK);
+        bdiv = new JButton("/");
+        bdiv.setForeground(Color.blue);
+        bdiv.setBackground(Color.BLACK);
+        beq = new JButton("=");
+        beq.setForeground(Color.blue);
+        beq.setBackground(Color.BLACK);
+        bdel = new JButton("DL");
+        bdel.setForeground(Color.blue);
+        bdel.setBackground(Color.BLACK);
+        bdec = new JButton(".");
+        bdec.setForeground(Color.white);
+        bdec.setBackground(Color.BLACK);
+        bac = new JButton("C");
+        bac.setForeground(Color.blue);
+        bac.setBackground(Color.BLACK);
+        bmod = new JButton("%");
+        bmod.setForeground(Color.blue);
+        bmod.setBackground(Color.BLACK);
+        b00 = new JButton("00");
+        b00.setForeground(Color.white);
+        b00.setBackground(Color.BLACK);
+
+        JButton[] buttons = {b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, badd, bsub, bmul, bdiv, beq, bdel, bdec, bac, bmod, b00};
+        for (JButton button : buttons) {
+            button.setFont(fo);
+            button.addActionListener(this);
+            f.add(button);
+        }
+
+        bac.setBounds(15, 100, 60, 40);
+        bmod.setBounds(75, 100, 60, 40);
+        bdel.setBounds(135, 100, 60, 40);
+        bdiv.setBounds(215, 100, 60, 40);
+
+        b7.setBounds(15, 140, 60, 40);
+        b8.setBounds(75, 140, 60, 40);
+        b9.setBounds(135, 140, 60, 40);
+        bmul.setBounds(215, 140, 60, 40);
+
+        b4.setBounds(15, 180, 60, 40);
+        b5.setBounds(75, 180, 60, 40);
+        b6.setBounds(135, 180, 60, 40);
+        bsub.setBounds(215, 180, 60, 40);
+
+        b1.setBounds(15, 220, 60, 40);
+        b2.setBounds(75, 220, 60, 40);
+        b3.setBounds(135, 220, 60, 40);
+        badd.setBounds(215, 220, 60, 40);
+
+        b00.setBounds(15, 260, 60, 40);
+        b0.setBounds(75, 260, 60, 40);
+        bdec.setBounds(135, 260, 60, 40);
+        beq.setBounds(215, 260, 60, 40);
+
+        currentExpression = new StringBuilder();
+    }
+
+    public static void main(String[] args) {
+        new Main();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        double result = 0; // Declare result variable
+
+        if (e.getSource() == bac) {
+            tf.setText("");
+            currentExpression.setLength(0);
+        } else if (e.getSource() == bdel) {
+            String s = tf.getText();
+            if (s.length() > 0) {
+                tf.setText(s.substring(0, s.length() - 1));
+                currentExpression.setLength(currentExpression.length() - 1);
+            }
+        } else if (e.getSource() == beq) {
+            try {
+                String expression = tf.getText();
+                result = eval(expression);
+                tf.setText("" + result);
+                currentExpression.setLength(0);
+            } catch (Exception ex) {
+                tf.setText("Error");
+            }
+        } else {
+            String command = ((JButton) e.getSource()).getText();
+            tf.setText(tf.getText() + command);
+            currentExpression.append(command);
+        }
+    }
+
+    // Method to evaluate the expression
+    public double eval(String expression) {
+        char[] tokens = expression.toCharArray();
+        Stack<Double> values = new Stack<>();
+        Stack<Character> ops = new Stack<>();
+
+        for (int i = 0; i < tokens.length; i++) {
+            if (tokens[i] >= '0' && tokens[i] <= '9') {
+                StringBuilder sbuf = new StringBuilder();
+                while (i < tokens.length && (tokens[i] >= '0' && tokens[i] <= '9' || tokens[i] == '.')) {
+                    sbuf.append(tokens[i++]);
+                }
+                values.push(Double.parseDouble(sbuf.toString()));
+                i--;
+            } else if (tokens[i] == '+' || tokens[i] == '-' || tokens[i] == '*' || tokens[i] == '/' || tokens[i] == '%') {
+                while (!ops.empty() && hasPrecedence(tokens[i], ops.peek())) {
+                    values.push(applyOp(ops.pop(), values.pop(), values.pop()));
+                }
+                ops.push(tokens[i]);
+            }
+        }
+
+        while (!ops.empty()) {
+            values.push(applyOp(ops.pop(), values.pop(), values.pop()));
+        }
+
+        return values.pop();
+    }
+
+    public boolean hasPrecedence(char op1, char op2) {
+        if ((op1 == '*' || op1 == '/' || op1 == '%') && (op2 == '+' || op2 == '-')) {
+            return false;
+        }
+        return true;
+    }
+
+    public double applyOp(char op, double b, double a) {
+        switch (op) {
+            case '+': return a + b;
+            case '-': return a - b;
+            case '*': return a * b;
+            case '/':
+                if (b == 0) throw new UnsupportedOperationException("Cannot divide by zero");
+                return a / b;
+            case '%': return a % b;
+        }
+        return 0;
+    }
+}
